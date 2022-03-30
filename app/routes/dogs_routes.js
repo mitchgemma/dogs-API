@@ -68,7 +68,7 @@ router.patch('/dogs/:id', requireToken, removeBlanks, (req, res, next) => {
   Dogs.findById(req.params.id)
     // handle our 404
     .then(handle404)
-    // requireOwnership and update the pet
+    // requireOwnership and update the dog
     .then((dogs) => {
       requireOwnership(req, dogs)
 
@@ -77,6 +77,27 @@ router.patch('/dogs/:id', requireToken, removeBlanks, (req, res, next) => {
     // send a 204 no content if successful
     .then(() => res.sendStatus(204))
     // pass to errorhandler if not successful
+    .catch(next)
+})
+
+// REMOVE
+// DELETE /dogs/:id
+router.delete('/dogs/:id', requireToken, (req, res, next) => {
+  // then find the dog by id
+  Dogs.findById(req.params.id)
+    // first handle the 404 if any
+    .then(handle404)
+    // use requireOwnership middleware to make sure the right person is making this request
+    .then((dog) => {
+      // requireOwnership needs two arguments
+      // these are the req, and the document itself
+      requireOwnership(req, dog)
+      // delete if the middleware doesnt throw an error
+      dog.deleteOne()
+    })
+    // send back a 204 no content status
+    .then(() => res.sendStatus(204))
+    // if error occurs, pass to the handler
     .catch(next)
 })
 

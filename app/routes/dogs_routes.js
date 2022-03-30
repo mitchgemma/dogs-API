@@ -33,10 +33,24 @@ router.get('/dogs', (req, res, next) => {
     .catch(next)
 })
 
+// SHOW
+// GET /dogs/:id
+router.get('/dogs/:id', (req, res, next) => {
+  // we get the id from req.params.id -> :id
+  Dogs.findById(req.params.id)
+    .populate('owner')
+    .then(handle404)
+    // if its successful, respond with an object as json
+    .then((dogs) => res.status(200).json({ dogs: dogs.toObject() }))
+    // otherwise pass to error handler
+    .catch(next)
+})
+
 // CREATE
 // POST /dogs
 router.post('/dogs', requireToken, (req, res, next) => {
-  //   req.body.dog.owner = req.user.id
+  req.body.dogs.owner = req.user.id
+  console.log('this is req.body', req.body)
 
   Dogs.create(req.body.dogs)
     .then((dogs) => {

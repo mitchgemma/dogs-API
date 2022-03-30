@@ -29,4 +29,4 @@ const dogSchema = new Schema(
   }
 )
 
-module.exports = model('Dog', dogSchema)
+module.exports = model('Dogs', dogSchema)

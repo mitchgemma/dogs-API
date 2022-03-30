@@ -59,5 +59,26 @@ router.post('/dogs', requireToken, (req, res, next) => {
     .catch(next)
 })
 
+// UPDATE
+// PATCH /dogs/:id
+router.patch('/dogs/:id', requireToken, removeBlanks, (req, res, next) => {
+  // if the client attempts to change the owner of the dog, we can disallow that from the getgo
+  delete req.body.owner
+  // then we find the dog by the id
+  Dogs.findById(req.params.id)
+    // handle our 404
+    .then(handle404)
+    // requireOwnership and update the pet
+    .then((dogs) => {
+      requireOwnership(req, dogs)
+
+      return dogs.updateOne(req.body.dogs)
+    })
+    // send a 204 no content if successful
+    .then(() => res.sendStatus(204))
+    // pass to errorhandler if not successful
+    .catch(next)
+})
+
 // needed for testing
 module.exports = router

@@ -1,7 +1,7 @@
 {
-  "name": "express-auth-mongoose-boilerplate",
+  "name": "dogs-api",
   "version": "1.0.0",
-  "description": "Auth boilerplate for mongoose express using token auth",
+  "description": "API with crud for dogs",
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
